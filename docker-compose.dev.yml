@@ -2,7 +2,7 @@ services:
   app:
     image: bloglist-front-dev
     build:
-      context: ./frontend
+      context: ./bloglist-frontend
       dockerfile: dev.Dockerfile
     volumes:
       - ./bloglist-frontend:/usr/src/app
@@ -12,17 +12,21 @@ services:
   server:
     image: bloglist-back-dev
     build:
-      context: ./backend
+      context: ./bloglist-backend
       dockerfile: dev.Dockerfile
     volumes:
       - ./bloglist-backend:/usr/src/app
       - /usr/src/app/node_modules
     environment:
       - MONGODB_URI=mongodb://mongo:27017/bloglist
+      - TEST_MONGODB_URI=mongodb://mongo:27017/bloglist-test
+      - SECRET=A8kX2mQ9pL5vN7rT1cY4hJ6wF0zS3uD8eG2nP9bV5xR1
+      - PORT=3000
 
   mongo:
     image: mongo
     volumes:
+      - ./bloglist-backend/mongo/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js
       - ./mongo_data:/data/db
 
   nginx:

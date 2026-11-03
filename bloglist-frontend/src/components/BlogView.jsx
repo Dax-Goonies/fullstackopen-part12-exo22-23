@@ -68,7 +68,7 @@ const BlogView = ({ blogs, handleLike, handleDelete, user }) => {
       <Row>
         <Typography variant="body2" color="textSecondary">
           by {blog.author}
-        </Typography>        
+        </Typography>
       </Row>
       <Row>
         <a href={blog.url} target="_blank" rel="noopener noreferrer">{blog.url}</a>

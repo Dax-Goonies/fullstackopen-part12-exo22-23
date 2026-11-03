@@ -1,0 +1,5 @@
+db.blogs.find({})
+db.blogs.fin({})
+db.users.find({})
+curl -X POST http://localhost:8080/api/users -H "Content-Type: application/json" -d '{"username":"testuser","name":"Test User","password":"password"}'
+db.users.find({})

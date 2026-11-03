@@ -48,7 +48,7 @@ const BlogForm = ({ createBlog }) => {
         </div>
         <StyledButton type="submit">create</StyledButton>
       </form>
-    </div>  
+    </div>
   )
 }
 

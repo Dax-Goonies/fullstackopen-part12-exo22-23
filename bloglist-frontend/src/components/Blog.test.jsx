@@ -3,47 +3,29 @@ import userEvent from '@testing-library/user-event'
 import Blog from './Blog'
 import BlogForm from './BlogForm'
 import Togglable from './Togglable'
+import { MemoryRouter } from 'react-router-dom'
 
-// Render test
+// TEST: Render blog basic informations in the list
 test('renders title and author, but not url or likes by default', () => {
   const blog = {
+    id: '1',
     title: 'Component testing is done with RTL',
     author: 'Kent C. Dodds',
-    url: 'https://reactjs.org',
-    likes: 5,
-    user: { name: 'Test User' }
   }
 
-  render(<Blog blog={blog} />)
+  render(
+    <MemoryRouter>
+      <Blog blog={blog} />
+    </MemoryRouter>
+  )
 
-  expect(screen.getByText('Component testing is done with RTL', { exact: false })).toBeVisible()
-  expect(screen.getByText('Kent C. Dodds', { exact: false })).toBeVisible()
+  const link = screen.getByText('Component testing is done with RTL', { exact: false })
 
-  expect(screen.getByText('https://reactjs.org')).not.toBeVisible()
-  expect(screen.getByText('likes', { exact: false })).not.toBeVisible()
+  expect(link).toBeVisible()
+  expect(link.closest('a')).toHaveAttribute('href', '/blogs/1')
 })
 
-// Click test
-test('url and likes are shown when the view button is clicked', async () => {
-  const blog = {
-    title: 'Component testing is done with RTL',
-    author: 'Kent C. Dodds',
-    url: 'https://reactjs.org',
-    likes: 5,
-    user: { name: 'Test User' }
-  }
-
-  render(<Blog blog={blog} />)
-
-  const user = userEvent.setup()
-  const viewButton = screen.getByText('view')
-  await user.click(viewButton)
-
-  expect(screen.getByText('https://reactjs.org')).toBeVisible()
-  expect(screen.getByText('likes', { exact: false })).toBeVisible()
-})
-
-// Togglable test
+// TEST: Toggle tagglable element
 describe('<Togglable />', () => {
   let container
 
@@ -74,42 +56,16 @@ describe('<Togglable />', () => {
   })
 })
 
-// Like test
-test('clicking the like button twice calls event handler twice', async () => {
-  const blog = {
-    title: 'Component testing is done with RTL',
-    author: 'Kent C. Dodds',
-    url: 'https://reactjs.org',
-    likes: 5,
-    user: { name: 'Test User' }
-  }
-
-  const mockHandler = vi.fn()
-
-  render(<Blog blog={blog} handleLike={mockHandler} />)
-
-  const user = userEvent.setup()
-
-  const viewButton = screen.getByText('view')
-  await user.click(viewButton)
-
-  const likeButton = screen.getByText('like')
-  await user.click(likeButton)
-  await user.click(likeButton)
-
-  expect(mockHandler).toHaveBeenCalledTimes(2)
-})
-
-// BlogForm test
+// TEST: Blog form
 test('<BlogForm /> updates parent state and calls onSubmit', async () => {
   const createBlog = vi.fn()
   const user = userEvent.setup()
 
   render(<BlogForm createBlog={createBlog} />)
 
-  const titleInput = screen.getByLabelText('title')
-  const authorInput = screen.getByLabelText('author')
-  const urlInput = screen.getByLabelText('url')
+  const titleInput = screen.getByTestId('title')
+  const authorInput = screen.getByTestId('author')
+  const urlInput = screen.getByTestId('url')
   const sendButton = screen.getByText('create')
 
   await user.type(titleInput, 'Testing Forms in React')
